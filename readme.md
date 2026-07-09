@@ -320,7 +320,7 @@ JWT=your_secret_key
 Clone Repository
 
 ```bash
-git clone https://github.com/your-username/portfolio-management-backend.git
+git clone https://github.com/alijafar000/portfolio-management-backend.git
 ```
 
 Install Dependencies
@@ -335,95 +335,6 @@ Run Server
 npm run dev
 ```
 
----
-
-# 📷 API Screenshots
-
-## Swagger UI
-
-```md
-![Swagger](./Screenshots/swagger.png)
-```
-
----
-
-## User Registration
-
-```md
-![Register](./Screenshots/register.png)
-```
-
----
-
-## User Login
-
-```md
-![Login](./Screenshots/login.png)
-```
-
----
-
-## Portfolio APIs
-
-```md
-![Portfolio](./Screenshots/portfolio.png)
-```
-
----
-
-## Project CRUD
-
-```md
-![Projects](./Screenshots/projects.png)
-```
-
----
-
-## Search & Filter
-
-```md
-![Search](./Screenshots/search-filter.png)
-```
-
----
-
-## Pagination
-
-```md
-![Pagination](./Screenshots/pagination.png)
-```
-
----
-
-## Image Upload
-
-```md
-![Upload](./Screenshots/upload.png)
-```
-
----
-
-## Dashboard
-
-```md
-![Dashboard](./Screenshots/dashboard.png)
-```
-
----
-
-## Activity Log
-
-```md
-![Activity](./Screenshots/activity.png)
-```
-
----
-
-## Admin Dashboard
-
-```md
-![Admin](./Screenshots/admin.png)
-```
 
 ---
 
