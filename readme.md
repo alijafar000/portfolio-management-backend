@@ -2,6 +2,14 @@
 
 A production-ready **Portfolio Management Backend API** built with **Node.js, Express.js, MongoDB, and JWT Authentication**. This project was developed during my **Backend Development Internship at Codiora** and enhanced over **5 weeks** by implementing authentication, CRUD operations, image upload, role-based authorization, API documentation, validation, logging, and other backend best practices.
 
+## 🚀 Live Demo
+
+**Live API**
+https://portfolio-management-backend-a07k.onrender.com
+
+**Swagger Documentation**
+https://portfolio-management-backend-a07k.onrender.com/api-docs
+
 ---
 
 # 📌 Project Overview
@@ -35,6 +43,7 @@ Users can:
 * Express Validator
 * Swagger (OpenAPI)
 * Winston Logger
+* Render
 
 ---
 
@@ -142,10 +151,25 @@ portfolio-management-backend
 
 ---
 
-## 📄 API Documentation
+## API Documentation
 
-Interactive API documentation using Swagger UI.
+Swagger UI
 
+https://portfolio-management-backend-a07k.onrender.com/api-docs
+
+
+## Deployment
+
+Backend is deployed on Render.
+
+Platform:
+- Render
+
+Database:
+- MongoDB Atlas
+
+Documentation:
+- Swagger UI
 ```
 http://localhost:2000/api-docs
 ```
