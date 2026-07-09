@@ -47,24 +47,133 @@ Users can:
 
 ---
 
-# 📂 Folder Structure
+## 🏗️ Project Architecture
 
-```text
-portfolio-management-backend
+```
+portfolio-management-backend/
 │
-├── Controllers
-├── Docs
-├── Middleware
-├── Models
-├── Routes
-├── Utils
-├── uploads
-├── logs
+├── Controllers/
+│   ├── activity.js
+│   ├── dashboard.js
+│   ├── portfolio.js
+│   ├── project.js
+│   ├── skill.js
+│   └── user.js
+│
+├── Middleware/
+│   ├── Auth.js
+│   ├── role.js
+│   ├── upload.js
+│   ├── validatior.js
+│   └── errorMiddleware.js
+│   └── rateLimiter.js
+│
+├── Models/
+│   ├── Activity.js
+│   ├── Portfolio.js
+│   ├── Project.js
+│   ├── Skill.js
+│   └── User.js
+│
+├── Routes/
+│   ├── admin.js
+│   ├── activity.js
+│   ├── dashboard.js
+│   ├── portfolio.js
+│   ├── project.js
+│   ├── skill.js
+│   └── user.js
+│
+├── utils/
+│   ├── activityLogger.js
+│   ├── logger.js
+│   └── swagger.js
+│
+├── uploads/
+│   ├── profile/
+│   └── projects/
+|
+├── Docs/
+│   ├── swagger.js
+│
 ├── .env
 ├── .gitignore
 ├── package.json
+├── package-lock.json
 └── server.js
 ```
+
+### 📌 Architecture Flow
+
+```
+Client
+   │
+   ▼
+Routes
+   │
+   ▼
+Authentication & Validation Middleware
+   │
+   ▼
+Controllers
+   │
+   ▼
+Business Logic
+   │
+   ▼
+MongoDB (Mongoose Models)
+   │
+   ▼
+JSON Response
+```
+
+---
+
+## 🔄 Request Lifecycle
+
+```
+Request
+   │
+   ▼
+Express Route
+   │
+   ▼
+Authentication (JWT)
+   │
+   ▼
+Role Authorization
+   │
+   ▼
+Validation
+   │
+   ▼
+Controller
+   │
+   ▼
+Database (MongoDB)
+   │
+   ▼
+Activity Logging
+   │
+   ▼
+Response
+```
+
+---
+
+## 📂 Folder Description
+
+| Folder | Purpose |
+|---------|---------|
+| Controllers | Contains all business logic |
+| Models | MongoDB schemas using Mongoose |
+| Routes | API endpoint definitions |
+| Middleware | Authentication, Authorization, Validation, Error Handling, File Upload |
+| utils | Logger, Activity Logger |
+| Docs |  Swagger configuration |
+| uploads | Stores uploaded profile & project images |
+| server.js | Application entry point |
+| .env | Environment variables |
 
 ---
 
