@@ -1,138 +1,302 @@
 import { Project } from "../Models/Project.js";
+import { logActivity } from "../utils/activityLogger.js";
+import logger from "../utils/logger.js";
 
 //add new project
-export const addProject = async (req, res) => {
-    const { projectName, description, technologiesUsed, category } = req.body;
+export const addProject = async (req, res, next) => {
+    try {
+        const { projectName, description, technologiesUsed, category, status } = req.body;
 
-    if (projectName == "" || description == "" || technologiesUsed == "" || category == "") return res.json({
-        message: "All fields are required...",
-        success: false
-    })
+        if (projectName == "" || description == "" || technologiesUsed == "" || category == "") return res.status(403).json({
+            message: "All fields are required...",
+            success: false
+        })
 
-    let project = await Project.findOne({ projectName, user: req.user._id });
+        let project = await Project.findOne({ projectName, user: req.user._id });
 
-    if (project) return res.json({
-        message: "Project already added...",
-        success: false
-    })
+        if (project) return res.json({
+            message: "Project already added...",
+            success: false
+        })
 
-    let savedProject = await Project.create({
-        user: req.user._id, projectName, description, technologiesUsed, category
-    })
-    res.json({
-        message: "Project add successfully...",
-        savedProject,
-        success: true
-    })
+        let savedProject = await Project.create({
+            user: req.user._id, projectName, description, technologiesUsed, category, status
+        })
+        //activity fn
+        await logActivity(
+            req.user._id,
+            "Project Added",
+            projectName
+        );
+        res.status(201).json({
+            message: "Project add successfully...",
+            savedProject,
+            success: true
+        })
+        logger.info(
+            `${req.user.email} added project ${projectName}`
+        );
+    } catch (error) {
+        next(error)
+    }
+
 }
 
-//get all project
+// //get all project
+// export const getAllProject = async (req, res) => {
+//     const userProject = await Project.find({user: req.user._id});
+
+//     if (userProject.length === 0) return res.json({
+//         message: "No project exists...",
+//         success: false
+//     })
+
+//     res.json({ message: "All project fetched...", userProject, success: true })
+// }
+
+//get project using pagination
 export const getAllProject = async (req, res) => {
-    const userProject = await Project.find({user: req.user._id});
 
-    if (userProject.length === 0) return res.json({
-        message: "No project exists...",
-        success: false
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 5;
+
+    const skip = (page - 1) * limit;
+
+    const totalProjects = await Project.countDocuments({
+        user: req.user._id
+    });
+
+    const userProject = await Project.find({
+        user: req.user._id
     })
+        .skip(skip)
+        .limit(limit);
 
-    res.json({ message: "All project fetched...", userProject, success: true })
+    res.json({
+        success: true,
+        currentPage: page,
+        totalPages: Math.ceil(totalProjects / limit),
+        totalProjects,
+        userProject
+    });
 }
 
 //get project by id
 export const getProjectById = async (req, res) => {
     const id = req.params.id;
 
-    const userProject = await Project.findOne({_id: id, user: req.user._id});
-    if (!userProject) return res.json({ message: "No project exists...", success: false })
+    const userProject = await Project.findOne({ _id: id, user: req.user._id });
+    if (!userProject) return res.status(404).json({ message: "No project exists...", success: false })
 
-    res.json({ message: "Project Fetched", userProject, success: true })
+    res.status(200).json({ message: "Project Fetched", userProject, success: true })
 }
 
 //update project 
-export const updateProject = async (req, res) => {
-    const id = req.params.id;
+export const updateProject = async (req, res, next) => {
+    try {
+        const id = req.params.id;
 
-    const { projectName, description, technologiesUsed, category } = req.body;
+        const { projectName, description, technologiesUsed, category } = req.body;
 
-    let updatedProject = await Project.findOneAndUpdate({
-      _id: id,
-      user: req.user._id
-   },
-    {
-        projectName,
-        description,
-        technologiesUsed, 
-        category
-    }, { new: true });
+        let updatedProject = await Project.findOneAndUpdate({
+            _id: id,
+            user: req.user._id
+        },
+            {
+                projectName,
+                description,
+                technologiesUsed,
+                category
+            }, { new: true });
 
-    if (!updatedProject) return res.json({
-        message: "No project exists...",
-        success: false
-    })
+        if (!updatedProject) return res.status(404).json({
+            message: "No project exists...",
+            success: false
+        })
+        //activity fn
+        await logActivity(
+            req.user._id,
+            "Project Updated",
+            updatedProject.projectName
+        );
 
-    res.json({
-        message: "Project update successfully...",
-        updatedProject,
-        success: true
-    })
+        res.status(200).json({
+            message: "Project update successfully...",
+            updatedProject,
+            success: true
+        })
+        logger.info(
+            `${req.user.email} updated project ${updatedProject.projectName}`
+        );
+    } catch (error) {
+        next(error)
+    }
 }
 
 //delete project
-export const deleteProject = async (req, res) => {
+export const deleteProject = async (req, res, next) => {
+    try {
+        const id = req.params.id;
+
+        let deletedProject = await Project.findOneAndDelete({
+            _id: id,
+            user: req.user._id
+        });
+
+        if (!deletedProject) return res.status(404).json({
+            message: "No project exists...",
+            success: false
+        });
+
+        //activity fn
+        await logActivity(
+            req.user._id,
+            "Project Deleted",
+            deletedProject.projectName
+        );
+
+        res.status(200).json({
+            message: "Project delete successfully...",
+            success: true
+        });
+        logger.info(
+            `${req.user.email} deleted project ${deletedProject.projectName}`
+        );
+    } catch (error) {
+        next(error)
+    }
+}
+// Adv search project
+export const searchProject = async (req, res, next) => {
+
+    try {
+        const {
+            keyword,
+            category,
+            technology,
+            status,
+            page = 1,
+            limit = 5,
+            sort = "new"
+        } = req.query;
+
+        let query = {
+            user: req.user._id
+        };
+
+        // Keyword Search
+        if (keyword) {
+            query.projectName = {
+                $regex: keyword,
+                $options: "i"
+            };
+        }
+
+        // Category
+        if (category) {
+            query.category = category;
+        }
+
+        // Technology
+        if (technology) {
+            query.technologiesUsed = {
+                $in: [technology]
+            };
+        }
+
+        // Status
+        if (status) {
+            query.status = status;
+        }
+
+        const skip = (Number(page) - 1) * Number(limit);
+
+        const totalProjects = await Project.countDocuments(query);
+
+        const projects = await Project.find(query)
+            .sort({
+                createdAt: sort === "old" ? 1 : -1
+            })
+            .skip(skip)
+            .limit(Number(limit));
+
+        res.json({
+            success: true,
+            totalProjects,
+            currentPage: Number(page),
+            totalPages: Math.ceil(totalProjects / limit),
+            projects
+        });
+    } catch (error) {
+        next(error)
+    }
+
+};
+
+//uploading project image
+export const uploadProjectImage = async (req, res) => {
+
     const id = req.params.id;
 
-    let deletedProject = await Project.findOneAndDelete({
-      _id: id,
-      user: req.user._id
-   },);
-
-    if (!deletedProject) return res.json({
-        message: "No project exists...",
-        success: false
-    })
-    res.json({
-        message: "Project delete successfully...",
-        success: true
-    })
-}
-
-//search project
-export const searchProject = async (req, res) => {
-    const { name, category, technology } = req.query;
-
-    let query = {
+    const project = await Project.findOne({
+        _id: id,
         user: req.user._id
-    };
+    });
 
-    if (name) {
-        query.projectName = {
-            $regex: name,
-            $options: "i"
-        };
-    }
-
-    if (category) {
-        query.category = category;
-    }
-
-    if (technology) {
-        query.technologiesUsed = {
-            $in: [technology]
-        };
-    }
-
-    const projects = await Project.find(query);
-
-    if (projects.length === 0) {
-        return res.json({
-            message: "No project found...",
+    if (!project) {
+        return res.status(404).json({
+            message: "Project not found",
             success: false
         });
     }
 
-    res.json({
-        message: "Projects fetched successfully...",
-        projects,
+    project.projectImage = req.file.path;
+
+    await project.save();
+    logger.info(
+        `${req.user.email} uploaded image for ${project.projectName}`
+    );
+
+    res.status(200).json({
+        message: "Project image uploaded",
+        image: project.projectImage,
         success: true
     });
-};
+}
+
+// //filter project
+// export const filterProjects = async (req, res) => {
+
+//     const {
+//         category,
+//         technology,
+//         status
+//     } = req.query;
+
+//     let query = {
+//         user: req.user._id
+//     };
+
+//     if (category) {
+//         query.category = category;
+//     }
+
+//     if (status) {
+//         query.status = status;
+//     }
+
+//     if (technology) {
+//         query.technologiesUsed = {
+//             $in: [technology]
+//         };
+//     }
+
+//     const projects =
+//         await Project.find(query);
+
+//     res.json({
+//         success: true,
+//         count: projects.length,
+//         projects
+//     });
+// }

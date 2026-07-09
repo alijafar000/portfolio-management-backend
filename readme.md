@@ -1,429 +1,499 @@
-# Portfolio Management Backend API
+# 🚀 Portfolio Management Backend API
 
-A RESTful Backend API built using Node.js, Express.js, MongoDB, and JWT Authentication for managing user portfolios, projects, skills, and dashboard statistics.
-
-## Features
-
-### Authentication
-- User Registration
-- User Login
-- JWT Authentication
-- Protected Routes
-
-### Project Management
-- Add New Project
-- Get All User Projects
-- Get Project By ID
-- Update Project
-- Delete Project
-- Search Projects
-- Category Based Projects
-
-### Portfolio Management
-- Create Portfolio
-- Get Portfolio Details
-- Update Portfolio
-
-### Skill Management
-- Add Skills
-- Get All Skills
-- Update Skills
-- Delete Skills
-
-### Dashboard Statistics
-- Total Projects Count
-- Total Skills Count
-- Category-wise Project Statistics
+A production-ready **Portfolio Management Backend API** built with **Node.js, Express.js, MongoDB, and JWT Authentication**. This project was developed during my **Backend Development Internship at Codiora** and enhanced over **5 weeks** by implementing authentication, CRUD operations, image upload, role-based authorization, API documentation, validation, logging, and other backend best practices.
 
 ---
 
-## Tech Stack
+# 📌 Project Overview
 
-- Node.js
-- Express.js
-- MongoDB Atlas
-- Mongoose
-- JWT Authentication
-- bcryptjs
-- Thunder Client
+The Portfolio Management Backend API allows users to create and manage their professional portfolio.
+
+Users can:
+
+* Register & Login securely
+* Manage Portfolio Information
+* Manage Skills
+* Manage Projects
+* Upload Profile & Project Images
+* Search, Filter & Paginate Projects
+* View Dashboard Statistics
+* Track User Activities
+* Access Admin Routes (Role Based)
+* Test APIs using Swagger Documentation
 
 ---
 
-## Project Structure
+# 🚀 Tech Stack
 
-```bash
+* Node.js
+* Express.js
+* MongoDB
+* Mongoose
+* JWT Authentication
+* bcrypt.js
+* Multer
+* Express Validator
+* Swagger (OpenAPI)
+* Winston Logger
+
+---
+
+# 📂 Folder Structure
+
+```text
 portfolio-management-backend
 │
 ├── Controllers
-│   ├── user.js
-│   ├── project.js
-│   ├── portfolio.js
-│   ├── skill.js
-│   └── dashboard.js
-│
+├── Docs
 ├── Middleware
-│   └── Auth.js
-│
 ├── Models
-│   ├── User.js
-│   ├── Project.js
-│   ├── Portfolio.js
-│   └── Skill.js
-│
 ├── Routes
-│   ├── user.js
-│   ├── project.js
-│   ├── portfolio.js
-│   ├── skill.js
-│   └── dashboard.js
-│
+├── Utils
+├── uploads
+├── logs
 ├── .env
-├── server.js
-└── package.json
+├── .gitignore
+├── package.json
+└── server.js
 ```
 
 ---
 
-## Installation
+# ✨ Features
 
-### Clone Repository
+## 👤 User Authentication
 
-```bash
-git clone <your-github-repository-link>
+* User Registration
+* User Login
+* JWT Authentication
+* Password Hashing using bcrypt
+* Role-Based Authorization
+* Profile Image Upload
+
+---
+
+## 📁 Portfolio Management
+
+* Create Portfolio
+* Get Portfolio
+* Update Portfolio
+
+---
+
+## 💻 Project Management
+
+* Add Project
+* Get All Projects
+* Get Project By ID
+* Update Project
+* Delete Project
+* Upload Project Image
+* Search Projects
+* Filter Projects
+* Pagination
+
+---
+
+## 🛠 Skill Management
+
+* Add Skill
+* Get All Skills
+* Update Skill
+* Delete Skill
+
+---
+
+## 📊 Dashboard
+
+* Total Projects
+* Total Skills
+* Portfolio Status
+* Activity Summary
+
+---
+
+## 📜 Activity Log
+
+* User Login Activity
+* Project Added
+* Project Updated
+* Project Deleted
+* Skill Added
+* Skill Updated
+* Skill Deleted
+
+---
+
+## 👨‍💼 Admin Features
+
+* Admin Dashboard
+* Role Based Authorization
+
+---
+
+## 🔒 Security Features
+
+* JWT Authentication
+* Password Hashing
+* Protected Routes
+* Role-Based Access
+* Express Validator
+* Centralized Error Handling
+
+---
+
+## 📄 API Documentation
+
+Interactive API documentation using Swagger UI.
+
+```
+http://localhost:2000/api-docs
 ```
 
-### Navigate to Project Directory
+---
 
-```bash
-cd portfolio-management-backend
+# 📌 Complete API Endpoints
+
+## Authentication
+
+| Method | Endpoint           |
+| ------ | ------------------ |
+| POST   | /api/user/register |
+| POST   | /api/user/login    |
+
+---
+
+## User
+
+| Method | Endpoint                 |
+| ------ | ------------------------ |
+| PUT    | /api/user/upload-profile |
+
+---
+
+## Portfolio
+
+| Method | Endpoint           |
+| ------ | ------------------ |
+| POST   | /api/portfolio/new |
+| GET    | /api/portfolio     |
+| PUT    | /api/portfolio     |
+
+---
+
+## Projects
+
+| Method | Endpoint                    |
+| ------ | --------------------------- |
+| POST   | /api/project/new            |
+| GET    | /api/project                |
+| GET    | /api/project/:id            |
+| PUT    | /api/project/:id            |
+| DELETE | /api/project/:id            |
+| PUT    | /api/project/upload-image/:id|
+| GET    | /api/project/search         |
+| GET    | /api/project?page=1&limit=5 |
+
+---
+
+## Skills
+
+| Method | Endpoint              |
+| ------ | --------------------- |
+| POST   | /api/skill/new        |
+| GET    | /api/skill            |
+| PUT    | /api/skill/:id        |
+| DELETE | /api/skill/:id        |
+
+---
+
+## Dashboard
+
+| Method | Endpoint             |
+| ------ | --------------       |
+| GET    | /api/dashboard/stats |
+
+---
+
+## Activity
+
+| Method | Endpoint      |
+| ------ | ------------- |
+| GET    | /api/activity |
+
+---
+
+## Admin
+
+| Method | Endpoint             |
+| ------ | -------------------- |
+| GET    | /api/admin/dashboard |
+
+---
+
+# 📌 Validation
+
+Implemented using **Express Validator**
+
+Validation includes:
+
+* Required Fields
+* Email Validation
+* Password Length Validation
+* Input Validation
+* Invalid Request Handling
+
+---
+
+# 📌 Logging System
+
+Implemented using **Winston Logger**
+
+Logs include:
+
+* Server Start
+* MongoDB Connection
+* User Registration
+* User Login
+* Project CRUD Operations
+* Skill CRUD Operations
+* Portfolio Updates
+* Profile Image Upload
+* Project Image Upload
+* Error Logs
+
+---
+
+# 📌 Search & Filtering
+
+Supported Features
+
+* Search by Project Name
+* Search by Category
+* Search by Technology
+* Filter by Status
+* Filter by Category
+* Filter by Technology
+
+---
+
+# 📌 Pagination
+
+Supports pagination for project listing.
+
+Example:
+
+```
+GET /api/project?page=1&limit=5
 ```
 
-### Install Dependencies
+---
 
-```bash
-npm install
+# 📌 Authentication
+
+Protected APIs require JWT Token.
+
+Authorization Header
+
+```
+Bearer <your_jwt_token>
 ```
 
-### Create Environment Variables
+---
 
-Create a `.env` file in the root directory.
+# 📌 Environment Variables
+
+Create a `.env` file
 
 ```env
-PORT=5000
+PORT=2000
 
 MONGO_URI=your_mongodb_connection_string
 
 JWT=your_secret_key
 ```
 
-### Start Development Server
+---
+
+# ⚙ Installation
+
+Clone Repository
+
+```bash
+git clone https://github.com/your-username/portfolio-management-backend.git
+```
+
+Install Dependencies
+
+```bash
+npm install
+```
+
+Run Server
 
 ```bash
 npm run dev
 ```
 
-Server will run on:
+---
 
-```bash
-http://localhost:5000
+# 📷 API Screenshots
+
+## Swagger UI
+
+```md
+![Swagger](./Screenshots/swagger.png)
 ```
 
 ---
 
-# Authentication APIs
+## User Registration
 
-## Register User
-
-### Endpoint
-
-```http
-POST /api/user/register
+```md
+![Register](./Screenshots/register.png)
 ```
-
-### Request Body
-
-```json
-{
-  "name": "Jafar Ali",
-  "email": "jafar@gmail.com",
-  "password": "123456"
-}
-```
-
-### Response
-
-```json
-{
-  "message": "User registered successfully",
-  "success": true
-}
-```
-### Screenshot
-
-![Register API](./screenshot/user-reg.png)
 
 ---
 
-## Login User
+## User Login
 
-### Endpoint
-
-```http
-POST /api/user/login
+```md
+![Login](./Screenshots/login.png)
 ```
-
-### Request Body
-
-```json
-{
-  "email": "jafar@gmail.com",
-  "password": "123456"
-}
-```
-
-### Screenshot
-
-![Register API](./screenshot/user-log.png)
-
 
 ---
 
-# Project APIs
+## Portfolio APIs
 
-## Add Project
-
-### Endpoint
-
-```http
-POST /api/project/new
+```md
+![Portfolio](./Screenshots/portfolio.png)
 ```
-
-### Screenshot
-
-![Register API](./screenshot/add-project.png)
-
 
 ---
 
-## Get All Projects
+## Project CRUD
 
-### Endpoint
-
-```http
-GET /api/project
+```md
+![Projects](./Screenshots/projects.png)
 ```
-
-### Screenshot
-
-![Register API](./screenshot/get-project.png)
 
 ---
 
-## Update Project
+## Search & Filter
 
-### Endpoint
-
-```http
-PUT /api/project/:id
+```md
+![Search](./Screenshots/search-filter.png)
 ```
-
-### Screenshot
-
-![Register API](./screenshot/update-project.png)
-
 
 ---
 
-## Search Project
+## Pagination
 
-### Endpoint
-
-```http
-GET /api/project/search
+```md
+![Pagination](./Screenshots/pagination.png)
 ```
-
-### Examples
-
-```http
-GET /api/project/search?name=atlas
-```
-
-```http
-GET /api/project/search?category=Web Development
-```
-
-```http
-GET /api/project/search?technology=React
-```
-
-### Screenshot
-
-![Register API](./screenshot/search-project.png)
-
 
 ---
 
-# Portfolio APIs
+## Image Upload
 
-## Create Portfolio
-
-### Endpoint
-
-```http
-POST /api/portfolio/new
+```md
+![Upload](./Screenshots/upload.png)
 ```
 
-### Screenshot
-
-![Portfolio API](./screenshot/add-portfolio.png)
-
-
 ---
 
-## Get Portfolio
+## Dashboard
 
-### Endpoint
-
-```http
-GET /api/portfolio
+```md
+![Dashboard](./Screenshots/dashboard.png)
 ```
 
-### Screenshot
-
-![Portfolio API](./screenshot/get-portfolio.png)
-
-
 ---
 
-## Update Portfolio
+## Activity Log
 
-### Endpoint
-
-```http
-PUT /api/portfolio
+```md
+![Activity](./Screenshots/activity.png)
 ```
 
-### Screenshot
-
-![Portfolio API](./screenshot/update-portfolio.png)
-
-
 ---
 
-# Skill APIs
+## Admin Dashboard
 
-## Add Skill
-
-### Endpoint
-
-```http
-POST /api/skill/new
+```md
+![Admin](./Screenshots/admin.png)
 ```
 
-### Screenshot
+---
 
-![Skill API](./screenshot/skill-add.png)
+# 🎯 Internship Progress
 
+### ✅ Week 1
+
+* User Authentication
+* JWT Authentication
+* Portfolio CRUD
+* Skill CRUD
+* Project CRUD
+* MongoDB Integration
 
 ---
 
-## Get Skills
+### ✅ Week 2
 
-### Endpoint
-
-```http
-GET /api/skill
-```
-
-### Screenshot
-
-![Skill API](./screenshot/get-skill.png)
-
+* Dashboard API
+* Search API
+* Filtering
+* Pagination
+* Better Project Structure
+* GitHub Documentation
 
 ---
 
-## Update Skill
+### ✅ Week 3
 
-### Endpoint
-
-```http
-PUT /api/skill/:id
-```
-
-### Screenshot
-
-![Skill API](./screenshot/update-skill.png)
+* Role-Based Authorization
+* Image Upload using Multer
+* Activity Logging
+* Security Improvements
+* Enhanced CRUD Operations
 
 ---
 
-# Dashboard API
+### ✅ Week 4
 
-## Get Dashboard Statistics
-
-### Endpoint
-
-```http
-GET /api/dashboard/stats
-```
-
-### Sample Response
-
-```json
-{
-  "totalProjects": 5,
-  "totalSkills": 8,
-  "categoryCounts": {
-    "Web Development": 3,
-    "Mobile Development": 1,
-    "Data Analysis": 1
-  }
-}
-```
-
-### Screenshot
-
-![Dashboard API](./screenshot/dashboard.png)
-
+* Express Validator
+* Advanced Search
+* Centralized Error Handling
+* Swagger Documentation
+* API Testing using Swagger
 
 ---
 
-# API Testing
+### ✅ Week 5
 
-All APIs were tested using Thunder Client.
-
-### Authentication Header
-
-```http
-Auth: JWT_TOKEN
-```
-
-Depending on middleware implementation.
+* Advanced Validation
+* Winston Logging System
+* Environment Configuration
+* Production Ready API Structure
+* Backend Testing
+* Deployment Ready Configuration
 
 ---
 
-# Future Improvements
+# 👨‍💻 Author
 
-- Swagger Documentation
-- Pagination
-- Project Image Upload
-- Portfolio Resume Upload
-- User Profile Image Upload
-- Advanced Filtering
-- Project Sorting
+**Jafar Ali**
 
----
+B.Tech CSE (3rd Year)
 
-# Author
+Jagannath University Jaipur
 
-### Jafar Ali
+GitHub: https://github.com/alijafar000
 
-Backend Developer Intern
-
-GitHub:
-https://github.com/alijafar000
+LinkedIn: https://www.linkedin.com/in/jafar-ali-397826293
 
 ---
 
-# Internship Task
-
-This project was developed as part of the Backend Developer Internship Program at Codiora Software House.
+⭐ If you found this project helpful, consider giving it a **Star** on GitHub.

@@ -26,7 +26,7 @@ export const getDashboardStats = async (req, res) => {
                 (categoryCounts[category] || 0) + 1;
         });
 
-        res.json({
+        res.status(200).json({
             message: "Dashboard stats fetched successfully...",
             totalProjects,
             totalSkills,

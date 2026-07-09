@@ -1,25 +1,70 @@
-import jwt from 'jsonwebtoken'
-import { User } from '../Models/User.js'
+// import jwt from 'jsonwebtoken'
+// import { User } from '../Models/User.js'
+
+// export const isAuthenticate = async (req, res, next) => {
+//     const token = req.header("Auth");
+
+//     if(!token) return res.status(400).json({
+//         message: "Login first...",
+//         success: false
+//     })
+
+//     const decoded = jwt.verify(token, process.env.JWT);
+//     const id = decoded.userId;
+
+//     let user = await User.findById(id);
+
+//     if(!user) return res.status(404).json({
+//         message: "User not found!",
+//         success: false
+//     })
+
+//     //globally save
+//     req.user = user;
+//     next();
+// }
+
+import jwt from "jsonwebtoken";
+import { User } from "../Models/User.js";
 
 export const isAuthenticate = async (req, res, next) => {
-    const token = req.header("Auth");
+    try {
+        const authHeader = req.headers.authorization;
 
-    if(!token) return res.json({
-        message: "Login first...",
-        success: false
-    })
+        if (!authHeader) {
+            return res.status(401).json({
+                message: "Login first...",
+                success: false,
+            });
+        }
 
-    const decoded = jwt.verify(token, process.env.JWT);
-    const id = decoded.userId;
+        const token = authHeader.split(" ")[1];
 
-    let user = await User.findById(id);
+        if (!token) {
+            return res.status(401).json({
+                message: "Invalid token...",
+                success: false,
+            });
+        }
 
-    if(!user) return res.json({
-        message: "User not found!",
-        success: false
-    })
+        const decoded = jwt.verify(token, process.env.JWT);
 
-    //globally save
-    req.user = user;
-    next();
-}
+        const user = await User.findById(decoded.userId);
+
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found!",
+                success: false,
+            });
+        }
+
+        req.user = user;
+        next();
+
+    } catch (error) {
+        return res.status(401).json({
+            message: "Invalid or Expired Token",
+            success: false,
+        });
+    }
+};

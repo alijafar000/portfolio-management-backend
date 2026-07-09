@@ -1,60 +1,109 @@
 import { User } from "../Models/User.js";
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import { logActivity } from "../utils/activityLogger.js";
+import logger from "../utils/logger.js";
 
-export const register = async (req, res) => {
-    const { name, email, password } = req.body;
+//user register
+export const register = async (req, res, next) => {
+    try {
+        const { name, email, password, role } = req.body;
 
-    if (name == "" || email == "" || password == "") return res.json({
-        message: "All fields are required..."
-    })
+        if (name == "" || email == "" || password == "") return res.status(403).json({
+            message: "All fields are required..."
+        })
 
-    let user = await User.findOne({ email });
+        let user = await User.findOne({ email });
 
-    if (user) return res.json({
-        message: "User alredy registered...",
-        success: false
-    })
+        if (user) return res.json({
+            message: "User alredy registered...",
+            success: false
+        })
 
-    let hashPassword = await bcrypt.hash(password, 10);
+        let hashPassword = await bcrypt.hash(password, 10);
 
-    user = await User.create({ name, email, password: hashPassword });
-    res.json({
-        message: "User created successfully...",
-        success: true,
-        user: user
-    })
+        user = await User.create({ name, email, password: hashPassword, role: role || "user" });
+        res.status(201).json({
+            message: "User created successfully...",
+            success: true,
+            user: user
+        }),
+            logger.info(
+                `${user.email} registered successfully`
+            );
+    } catch (error) {
+        next(error);
+    }
 }
 
-export const login = async (req, res) => {
-    const { email, password } = req.body;
+//user login
+export const login = async (req, res, next) => {
+    try {
+        const { email, password } = req.body;
 
-    if (email == "" || password == "") return res.json({
-        message: "All fields are required...",
-        success: false
-    })
+        if (email == "" || password == "") return res.status(403).json({
+            message: "All fields are required...",
+            success: false
+        })
 
-    //finding user email from db
-    const user = await User.findOne({ email });
+        //finding user email from db
+        const user = await User.findOne({ email });
 
-    if (!user) return res.json({
-        message: "User not found...",
-        success: false
-    })
+        if (!user) return res.status(404).json({
+            message: "User not found...",
+            success: false
+        })
 
-    const validPassword = await bcrypt.compare(password, user.password);
-    if (!validPassword) return res.json({
-        message: "Invalid password...",
-        success: false
-    })
+        const validPassword = await bcrypt.compare(password, user.password);
+        if (!validPassword) return res.status(401).json({
+            message: "Invalid password...",
+            success: false
+        })
 
-    //generating jwt token
-    const token = jwt.sign({ userId: user._id }, process.env.JWT);
+        //generating jwt token
+        // const token = jwt.sign({ userId: user._id }, process.env.JWT);
 
-    res.json({
-        message: `Welcome ${user.name}`,
-        token,
+        const token = jwt.sign(
+            { userId: user._id },
+            process.env.JWT,
+            { expiresIn: "7d" }
+        );
+        logger.info(
+            `${user.email} logged in`
+        );
+        //activity fn
+        await logActivity(
+            user._id,
+            "User Login",
+            `${user.name} logged in`
+        );
+
+        res.status(200).json({
+            message: `Welcome ${user.name}`,
+            token,
+            role: user.role,
+            success: true
+        })
+    } catch (error) {
+        next(error);
+    }
+}
+
+//profile image upload
+export const uploadProfileImage = async (req, res) => {
+
+    const user = await User.findById(req.user._id);
+
+    user.profileImage = req.file.path;
+
+    await user.save();
+    logger.info(
+        `${req.user.email} uploaded profile image`
+    );
+
+    res.status(200).json({
+        message: "Profile image uploaded",
+        image: user.profileImage,
         success: true
-    })
-
+    });
 }
