@@ -1,8 +1,7 @@
 import express from 'express'
-import { addProject, deleteProject, getAllProject, getProjectById, searchProject, updateProject } from '../Controllers/project.js';
+import { addProject, deleteProject, getAllProject, getProjectById, searchProject, updateProject, uploadProjectImage } from '../Controllers/project.js';
 import { isAuthenticate } from '../Middleware/Auth.js';
 import { upload } from '../Middleware/Upload.js';
-import { uploadProfileImage } from '../Controllers/user.js';
 import { projectValidation } from '../Middleware/Validator.js';
 
 const router = express.Router();
@@ -245,6 +244,6 @@ router.delete('/:id', isAuthenticate, deleteProject);
  */
 router.put("/upload-image/:id", isAuthenticate,
    upload.single("projectImage"),
-   uploadProfileImage
+   uploadProjectImage
 );
 export default router;
